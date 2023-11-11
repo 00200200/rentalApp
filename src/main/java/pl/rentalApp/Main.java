@@ -18,7 +18,6 @@ public class Main extends Application {
         MainAppController mainAppController = loader.getController();
         if(mainAppController != null){
             mainAppController.setPrimaryStage(stage);
-
         }else{
             throw new Error("mainAppController is Null");
         }

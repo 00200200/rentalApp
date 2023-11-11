@@ -1,3 +1,13 @@
 1,Nazwa Klienta,true
-2,Nazwa Klienta,false
-3,Nazwa Klienta,false
+2,Nazwa Klienta,true
+3,Nazwa Klienta,true
+4,Nazwa Klienta,true
+5,Nazwa Klienta,false
+6,Nazwa Klienta,false
+7,Nazwa Klienta,true
+8,Nazwa Klienta,false
+9,Michał,true
+10,MIchał,true
+11,Tomasz,true
+12,Michał,true
+13,Tomasz,true

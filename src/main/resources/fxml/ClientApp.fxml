@@ -13,7 +13,7 @@
       <Label layoutX="37.0" layoutY="68.0" text="Dostępne narty" />
       <Button onAction="#returnSkis" layoutX="489.0" layoutY="311.0" mnemonicParsing="false" text="Oddaj Narty" />
       <Button onAction="#handleTakeSki" layoutX="292.0" layoutY="311.0" mnemonicParsing="false" text="Odbierz Narty" />
-      <Button onAction="#reloadData" layoutX="27.0" layoutY="342.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" text="Odśwież" />
+      <Button  layoutX="27.0" layoutY="342.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="94.0" text="Odśwież" />
       <Label layoutX="182.0" layoutY="68.0" text="Twoje Narty" />
       <TableView fx:id="availableSkisTable" layoutX="14.0" layoutY="100.0" prefHeight="200.0" prefWidth="246.0">
         <columns>

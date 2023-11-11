@@ -16,21 +16,24 @@ public class ReservationManager implements Subject {
 
     private static ReservationManager instance;
 
-    private ReservationManager(){};
+    private ReservationManager() {
+    }
 
-    public static ReservationManager getInstance(){
-        if(instance == null){
+    ;
+
+    public static ReservationManager getInstance() {
+        if (instance == null) {
             instance = new ReservationManager();
         }
         return instance;
     }
 
     public ReservationManager saveReservation(Reservation reservation) throws IOException {
-        try{
+        try {
             File file = new File(filePath);
-            FileWriter fileWriter = new FileWriter(file,true);
+            FileWriter fileWriter = new FileWriter(file, true);
             BufferedWriter writer = new BufferedWriter(fileWriter);
-            writer.write(reservation.getId() + "," + reservation.getId_narty() + "," + reservation.getId_klienta() + "," + reservation.getStartDate() + "," + reservation.getEndDate() + "," + reservation.getStatus() + "," + reservation.isPayMent()  +
+            writer.write(reservation.getId() + "," + reservation.getId_narty() + "," + reservation.getId_klienta() + "," + reservation.getStartDate() + "," + reservation.getEndDate() + "," + reservation.getStatus() + "," + reservation.isPayMent() +
                     "\n");
             writer.close();
         } catch (IOException e) {
@@ -42,10 +45,10 @@ public class ReservationManager implements Subject {
 
     public void saveReservationsToFile(List<Reservation> reservations) throws IOException {
         File file = new File(filePath);
-        FileWriter fileWriter = new FileWriter(file,false);
+        FileWriter fileWriter = new FileWriter(file, false);
         BufferedWriter writer = new BufferedWriter(fileWriter);
-        for(Reservation reservation : reservations){
-            String line = reservation.getId() + "," + reservation.getId_narty() + "," + reservation.getId_klienta() + "," + reservation.getStartDate() + "," + reservation.getEndDate() + "," + reservation.getStatus() + "," + reservation.isPayMent()  +
+        for (Reservation reservation : reservations) {
+            String line = reservation.getId() + "," + reservation.getId_narty() + "," + reservation.getId_klienta() + "," + reservation.getStartDate() + "," + reservation.getEndDate() + "," + reservation.getStatus() + "," + reservation.isPayMent() +
                     "\n";
             writer.write(line);
         }
@@ -53,12 +56,12 @@ public class ReservationManager implements Subject {
         notifyObservers();
     }
 
-    public List<Reservation> readReservations(){
+    public List<Reservation> readReservations() {
         List<Reservation> reservations = new ArrayList<>();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filePath));
             String line;
-            while(((line = reader.readLine()) != null)){
+            while (((line = reader.readLine()) != null)) {
                 String[] parts = line.split(",");
                 int reservation_id = Integer.parseInt(parts[0]);
                 int ski_id = Integer.parseInt(parts[1]);
@@ -67,10 +70,8 @@ public class ReservationManager implements Subject {
                 LocalDate endDate = LocalDate.parse(parts[4]);
                 String status = parts[5];
                 boolean payMent = Boolean.parseBoolean(parts[6]);
-                reservations.add(new Reservation( reservation_id,ski_id,client_id,startDate,endDate,status,payMent));
+                reservations.add(new Reservation(reservation_id, ski_id, client_id, startDate, endDate, status, payMent));
             }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -79,7 +80,7 @@ public class ReservationManager implements Subject {
 
     @Override
     public void addObserver(Observer o) {
-        if(!observers.contains(o)) {
+        if (!observers.contains(o)) {
             observers.add(o);
         }
     }
@@ -91,10 +92,8 @@ public class ReservationManager implements Subject {
 
     @Override
     public void notifyObservers() {
-        for(Observer observer : observers){
+        for (Observer observer : observers) {
             observer.update();
-            System.out.println(observer.getClass().getName());
-            System.out.println("NOTIFY ");
         }
     }
 }

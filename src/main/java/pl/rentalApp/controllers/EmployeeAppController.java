@@ -30,13 +30,15 @@ public class EmployeeAppController implements Observer {
     private TableColumn<Reservation, Integer> employeeTableId;
 
     @FXML
-    private TableColumn<Reservation, String > employeeTableSki;
+    private TableColumn<Reservation, String> employeeTableSki;
 
     @FXML
     private TableColumn<Reservation, String> employeeTableStatus;
-    @FXML TableColumn<Reservation,Boolean> employeeTablePayment;
     @FXML
-    public void initialize(){
+    TableColumn<Reservation, Boolean> employeeTablePayment;
+
+    @FXML
+    public void initialize() {
         employeeTableId.setCellValueFactory(new PropertyValueFactory<>("id"));
         employeeTableSki.setCellValueFactory(new PropertyValueFactory<>("id_narty"));
         employeeTableStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
@@ -44,26 +46,24 @@ public class EmployeeAppController implements Observer {
         loadData();
     }
 
-    public EmployeeAppController(){
+    public EmployeeAppController() {
         skisManager = SkisManager.getInstance();
         skisManager.addObserver(this);
 
     }
 
     @FXML
-    private void refreshData(){
+    private void refreshData() {
         loadData();
     }
 
     @FXML
-    private void handleReturnSki () throws IOException {
+    private void handleReturnSki() throws IOException {
         ReservationManager reservationManager = ReservationManager.getInstance();
         List<Reservation> reservations = reservationManager.readReservations();
         Reservation selectedReservation = employeeTable.getSelectionModel().getSelectedItem();
-        Reservation selectedReservationInArray = reservations.get(selectedReservation.getId() -1);
-        System.out.println(selectedReservationInArray.getId());
-        System.out.println(selectedReservation.getId());
-        if(selectedReservation != null && selectedReservation.getStatus().equals("Oddane")) {
+        Reservation selectedReservationInArray = reservations.stream().filter(reservation -> reservation.getId() == selectedReservation.getId()).findFirst().orElse(null);
+        if (selectedReservation != null && selectedReservation.getStatus().equals("Oddane")) {
             SkisManager skisManager = SkisManager.getInstance();
             List<Ski> skis = skisManager.readSkisFromFile();
             for (Ski ski : skis) {
@@ -86,15 +86,14 @@ public class EmployeeAppController implements Observer {
         ReservationManager reservationManager = ReservationManager.getInstance();
         List<Reservation> reservations = reservationManager.readReservations();
         Reservation selectedReservation = employeeTable.getSelectionModel().getSelectedItem();
-        Reservation selectedReservationInArray = reservations.get(selectedReservation.getId() -1);
+        Reservation selectedReservationInArray = reservations.stream().filter(reservation -> reservation.getId() == selectedReservation.getId()).findFirst().orElse(null);
         System.out.println(selectedReservationInArray.getId());
         System.out.println(selectedReservation.getId());
-        if(selectedReservation != null && selectedReservation.getStatus().equals("Czeka na odbiór")) {
+        if (selectedReservation != null && selectedReservation.getStatus().equals("Czeka na odbiór")) {
             SkisManager skisManager = SkisManager.getInstance();
             List<Ski> skis = skisManager.readSkisFromFile();
             for (Ski ski : skis) {
                 if (ski.getId() == selectedReservation.getId_narty()) {
-                    System.out.println("NO JESTESMY TU");
                     if (selectedReservation.getStatus().equals("Czeka na odbiór")) {
                         System.out.println(selectedReservation.getStatus());
                         ski.setStatus("Wydane");
@@ -110,7 +109,7 @@ public class EmployeeAppController implements Observer {
     }
 
 
-    public void loadData(){
+    public void loadData() {
         ReservationManager reservationManager = ReservationManager.getInstance();
         List<Reservation> reservations = reservationManager.readReservations();
         employeeTable.getItems().setAll(reservations);
@@ -120,7 +119,5 @@ public class EmployeeAppController implements Observer {
     @Override
     public void update() {
         loadData();
-        System.out.println("UPDATE W METODZIE EMPLOYEEAPPCONTROLLER");
-
     }
 }

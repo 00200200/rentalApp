@@ -21,9 +21,7 @@ import java.util.List;
 public class ManagerAppController implements Observer {
     private SkisManager skisManager;
     private ReservationManager reservationManager;
-    private ClientManager clientManager;
-    @FXML
-    private Button ManagerAddSkiButton;
+
     @FXML
     private TextField ManagerAddSkiLengthInput;
     @FXML
@@ -35,19 +33,19 @@ public class ManagerAppController implements Observer {
     @FXML
     private TableView<Client> ManagerClientsTable;
     @FXML
-    private TableColumn<Client,Boolean> ManagerClientRegistered;
+    private TableColumn<Client, Boolean> ManagerClientRegistered;
     @FXML
     private TableColumn<Reservation, Integer> ManagerReservationClientID;
     @FXML
     private TableColumn<Reservation, Integer> ManagerReservationID;
     @FXML
-    private TableColumn<Reservation,Boolean> ManagerReservationPayment;
+    private TableColumn<Reservation, Boolean> ManagerReservationPayment;
     @FXML
-    private TableColumn<Reservation,String> ManagerReservationStatus;
+    private TableColumn<Reservation, String> ManagerReservationStatus;
     @FXML
     private TableView<Reservation> ManagerReservationTable;
     @FXML
-    private TableColumn<Ski,Integer> ManagerSkisIDTable;
+    private TableColumn<Ski, Integer> ManagerSkisIDTable;
     @FXML
     private TableColumn<Ski, Integer> ManagerSkisLengthTable;
     @FXML
@@ -55,15 +53,17 @@ public class ManagerAppController implements Observer {
     @FXML
     private TableView<Ski> ManagerSkisTable;
     @FXML
-    private TableColumn<Ski,String> ManagerSkisTypeTable;
+    private TableColumn<Ski, String> ManagerSkisTypeTable;
+
     public ManagerAppController() {
         skisManager = SkisManager.getInstance();
         skisManager.addObserver(this);
         reservationManager = ReservationManager.getInstance();
         reservationManager.addObserver(this);
+
     }
-@FXML
-    public void initialize(){
+    @FXML
+    public void initialize() {
         ManagerSkisTypeTable.setCellValueFactory(new PropertyValueFactory<>("type"));
         ManagerSkisStatusTable.setCellValueFactory(new PropertyValueFactory<>("status"));
         ManagerSkisLengthTable.setCellValueFactory(new PropertyValueFactory<>("length"));
@@ -81,11 +81,11 @@ public class ManagerAppController implements Observer {
     }
 
     @FXML
-    public void addSki(){
+    public void addSki() {
         SkisManager skisManager = SkisManager.getInstance();
         List<Ski> skis = skisManager.readSkisFromFile();
-        if(ManagerAddSkiLengthInput.getText() != null && ManagerAddSkiTypeInput != null){
-            skis.add(new Ski(skis.size() +1,ManagerAddSkiTypeInput.getText(),Integer.parseInt(ManagerAddSkiLengthInput.getText()),"dostepne"));
+        if (ManagerAddSkiLengthInput.getText() != null && ManagerAddSkiTypeInput != null) {
+            skis.add(new Ski(skis.size() + 1, ManagerAddSkiTypeInput.getText(), Integer.parseInt(ManagerAddSkiLengthInput.getText()), "dostepne"));
             skisManager.saveSkisToFile(skis);
         }
     }
@@ -95,14 +95,15 @@ public class ManagerAppController implements Observer {
         Client selectedClient = ManagerClientsTable.getSelectionModel().getSelectedItem();
         ClientManager clientManager = new ClientManager();
         List<Client> clientList = clientManager.readClients();
-        Client selectedClientInArray = clientList.get(selectedClient.getId() -1);
-        if((selectedClient != null && !selectedClient.getRegistered())){
+        Client selectedClientInArray = clientList.get(selectedClient.getId() - 1);
+        if ((selectedClient != null && !selectedClient.getRegistered())) {
             selectedClientInArray.setRegistered(true);
         }
         clientManager.updateClients(clientList);
         loadData();
     }
-    public void loadData(){
+
+    public void loadData() {
         ReservationManager reservationManager = ReservationManager.getInstance();
         List<Reservation> reservations = reservationManager.readReservations();
         SkisManager skisManager = SkisManager.getInstance();
@@ -116,8 +117,6 @@ public class ManagerAppController implements Observer {
 
     @Override
     public void update() {
-        System.out.println("UPDATE W METODZIE MANAGERAPPCONTROLLER");
-
         loadData();
     }
 }

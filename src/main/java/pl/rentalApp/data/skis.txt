@@ -1,6 +1,6 @@
-1,Slalom,150,Zarezerwowane
-2,Freestyle,160,Zarezerwowane
-3,Mountain,170,Oddane
+1,Slalom,150,dostepne
+2,Freestyle,160,dostepne
+3,Mountain,170,dostepne
 4,FreeRide,180,dostepne
 5,Carving,165,dostepne
 6,Slalom,155,dostepne
@@ -9,8 +9,4 @@
 9,FreeRide,170,dostepne
 10,Carving,160,dostepne
 11,Slalom,130,dostepne
-12,Carvin,180,dostepne
-13,Slalom,120,dostepne
-14,Slalom,130,dostepne
-15,Slalom,111,dostepne
-16,Slalom,110,dostepne
+12,FreeRide,165,dostepne

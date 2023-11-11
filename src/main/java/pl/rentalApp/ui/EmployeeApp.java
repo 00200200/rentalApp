@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
 // JAK STARCZY CZASU TO  ZAMIAST W CONTROLLERZE TUTAJ TO ROBIC
 public class EmployeeApp extends Application {
     public static void main(String[] args) {

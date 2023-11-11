@@ -1,4 +1,5 @@
 package pl.rentalApp.controllers;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,15 +13,18 @@ import pl.rentalApp.models.Client;
 import pl.rentalApp.ui.EmployeeApp;
 
 import java.io.IOException;
+
 public class MainAppController {
     @FXML
     private TextField clientName;
     private Stage primaryStage;
     @FXML
     private Button clientButton;
-    public void setPrimaryStage(Stage primaryStage){
+
+    public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
     }
+
     @FXML
     void loginAsClient(ActionEvent event) {
         String name = clientName.getText();
@@ -29,12 +33,12 @@ public class MainAppController {
         }
     }
     @FXML
-    void openEmployeeApp(){
+    void openEmployeeApp() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Employee.fxml"));
             Parent root = loader.load();
             Stage stage = new Stage();
-            stage.setScene(new Scene(root));;
+            stage.setScene(new Scene(root));
             stage.show();
             stage.toFront();
             stage.setTitle("Panel Pracownika");
@@ -44,12 +48,12 @@ public class MainAppController {
     }
 
     @FXML
-    void openManagerApp(){
+    void openManagerApp() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ManagerApp.fxml"));
             Parent root = loader.load();
             Stage stage = new Stage();
-            stage.setScene(new Scene(root));;
+            stage.setScene(new Scene(root));
             stage.show();
             stage.setTitle("Panel Managera");
             stage.toFront();
@@ -58,13 +62,13 @@ public class MainAppController {
         }
     }
 
-    private void openClientApp(String name){
+    private void openClientApp(String name) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ClientApp.fxml"));
             Parent root = loader.load();
             ClientAppController clientAppController = loader.getController();
             ClientManager clientManager = new ClientManager();
-            Client newClient  = clientManager.createClient(name);
+            Client newClient = clientManager.createClient(name);
             clientAppController.setClientId(newClient.getId());
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
