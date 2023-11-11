@@ -8,10 +8,10 @@ public class ClientApp extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    private static String clientId;
-    public static void setClientId(String id){
-        clientId = id;
-    }
+//    private static String clientId;
+//    public static void setClientId(String id){
+//        clientId = id;
+//    }
     @Override
     public void start(Stage stage) throws Exception {
         VBox mainPane =  FXMLLoader.load(getClass().getResource("/fxml/ClientApp.fxml"));

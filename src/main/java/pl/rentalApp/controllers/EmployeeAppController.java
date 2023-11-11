@@ -9,12 +9,13 @@ import pl.rentalApp.manager.ReservationManager;
 import pl.rentalApp.manager.SkisManager;
 import pl.rentalApp.models.Reservation;
 import pl.rentalApp.models.Ski;
+import pl.rentalApp.observer.Observer;
 
 import java.io.IOException;
 import java.util.List;
 
-public class EmployeeAppController {
-
+public class EmployeeAppController implements Observer {
+    private SkisManager skisManager;
     @FXML
     private Button employeButonTake;
     @FXML
@@ -43,6 +44,12 @@ public class EmployeeAppController {
         loadData();
     }
 
+    public EmployeeAppController(){
+        skisManager = SkisManager.getInstance();
+        skisManager.addObserver(this);
+
+    }
+
     @FXML
     private void refreshData(){
         loadData();
@@ -50,14 +57,14 @@ public class EmployeeAppController {
 
     @FXML
     private void handleReturnSki () throws IOException {
-        ReservationManager reservationManager = new ReservationManager();
+        ReservationManager reservationManager = ReservationManager.getInstance();
         List<Reservation> reservations = reservationManager.readReservations();
         Reservation selectedReservation = employeeTable.getSelectionModel().getSelectedItem();
         Reservation selectedReservationInArray = reservations.get(selectedReservation.getId() -1);
         System.out.println(selectedReservationInArray.getId());
         System.out.println(selectedReservation.getId());
         if(selectedReservation != null && selectedReservation.getStatus().equals("Oddane")) {
-            SkisManager skisManager = new SkisManager();
+            SkisManager skisManager = SkisManager.getInstance();
             List<Ski> skis = skisManager.readSkisFromFile();
             for (Ski ski : skis) {
                 if (ski.getId() == selectedReservation.getId_narty()) {
@@ -70,20 +77,20 @@ public class EmployeeAppController {
             }
             reservationManager.saveReservationsToFile(reservations);
             skisManager.saveSkisToFile(skis);
-            loadData();
+//            loadData();
         }
     }
 
     @FXML
     private void handleGiveSki() throws IOException {
-        ReservationManager reservationManager = new ReservationManager();
+        ReservationManager reservationManager = ReservationManager.getInstance();
         List<Reservation> reservations = reservationManager.readReservations();
         Reservation selectedReservation = employeeTable.getSelectionModel().getSelectedItem();
         Reservation selectedReservationInArray = reservations.get(selectedReservation.getId() -1);
         System.out.println(selectedReservationInArray.getId());
         System.out.println(selectedReservation.getId());
         if(selectedReservation != null && selectedReservation.getStatus().equals("Czeka na odbiór")) {
-            SkisManager skisManager = new SkisManager();
+            SkisManager skisManager = SkisManager.getInstance();
             List<Ski> skis = skisManager.readSkisFromFile();
             for (Ski ski : skis) {
                 if (ski.getId() == selectedReservation.getId_narty()) {
@@ -98,16 +105,22 @@ public class EmployeeAppController {
             }
             reservationManager.saveReservationsToFile(reservations);
             skisManager.saveSkisToFile(skis);
-            loadData();
+//            loadData();
         }
     }
 
 
     public void loadData(){
-        ReservationManager reservationManager = new ReservationManager();
+        ReservationManager reservationManager = ReservationManager.getInstance();
         List<Reservation> reservations = reservationManager.readReservations();
         employeeTable.getItems().setAll(reservations);
     }
 
 
+    @Override
+    public void update() {
+        loadData();
+        System.out.println("UPDATE W METODZIE EMPLOYEEAPPCONTROLLER");
+
+    }
 }

@@ -63,7 +63,8 @@ public class MainAppController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ClientApp.fxml"));
             Parent root = loader.load();
             ClientAppController clientAppController = loader.getController();
-            Client newClient  = ClientManager.createClient(name);
+            ClientManager clientManager = new ClientManager();
+            Client newClient  = clientManager.createClient(name);
             clientAppController.setClientId(newClient.getId());
             Stage stage = new Stage();
             stage.setScene(new Scene(root));

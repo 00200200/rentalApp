@@ -1,5 +1,8 @@
 package pl.rentalApp.manager;
 import pl.rentalApp.models.Client;
+import pl.rentalApp.observer.Observer;
+import pl.rentalApp.observer.Subject;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -7,11 +10,16 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClientManager {
+public class ClientManager implements Subject {
+    private List<Observer> observers = new ArrayList<>();
+
     private static int lastClientId = findLastClientId();
 
+    public ClientManager(){};
     private static String filePath = "src/main/java/pl/rentalApp/data/clients.txt";
-    public static Client createClient(String name){
+
+
+    public  Client createClient(String name){
         lastClientId ++;
         Client newClient = new Client(lastClientId,name,false);
         saveClientToFile(newClient);
@@ -60,19 +68,21 @@ public class ClientManager {
         }
         return clients;
     }
-    private static void saveClientToFile(Client client){
+    public void saveClientToFile(Client client){
         try {
             FileWriter fileWriter = new FileWriter(filePath,true);
             BufferedWriter writer = new BufferedWriter(fileWriter);
             writer.write(client.getId() + "," + client.getName() +"," + client.getRegistered() + "" +
                     "\n");
             writer.close();
+            notifyObservers();
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static void updateClients(List<Client> clients) throws IOException {
+    public void updateClients(List<Client> clients) throws IOException {
         File file = new File(filePath);
         FileWriter fileWriter = new FileWriter(file,false);
         BufferedWriter writer = new BufferedWriter(fileWriter);
@@ -81,7 +91,31 @@ public class ClientManager {
                     "\n";
             writer.write(line);
         }
+        notifyObservers();
         writer.close();
+
     }
 
+    @Override
+    public void addObserver(Observer o) {
+        if(!observers.contains(o)){
+            observers.add(o);
+            System.out.println("DODAJEMY OBSERWER" + o.getClass().getName());
+        }
+
+    }
+
+    @Override
+    public void removeObserver(Observer o) {
+
+    }
+
+    @Override
+    public void notifyObservers() {
+            for(Observer observer : observers) {
+                System.out.println(observer.getClass().getName());
+                System.out.println("NOTIFY ");
+                observer.update();
+            }
+    }
 }

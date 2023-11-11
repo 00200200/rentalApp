@@ -10,13 +10,24 @@ import pl.rentalApp.manager.SkisManager;
 import pl.rentalApp.models.Client;
 import pl.rentalApp.models.Reservation;
 import pl.rentalApp.models.Ski;
+import pl.rentalApp.observer.Observer;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-public class ClientAppController {
+public class ClientAppController implements Observer {
+    private SkisManager skisManager;
+    private ClientManager clientManager;
     private int clientId;
+
+    private boolean isDataChanged;
+    public ClientAppController() {
+        skisManager =  SkisManager.getInstance();
+        skisManager.addObserver(this);
+        isDataChanged = true;
+    }
+
     public void setClientId(int clientId){
         this.clientId = clientId;
     }
@@ -29,8 +40,7 @@ public class ClientAppController {
     private List<Ski> skis;
     @FXML
     private TableColumn<Ski,Integer> availableTableLengthClient;
-    @FXML
-    private Button clientReservation;
+
 
     @FXML
     public void initialize(){
@@ -45,13 +55,19 @@ public class ClientAppController {
     }
 
     private void loadSkisData(){
-        SkisManager skisManager = new SkisManager();
-        ReservationManager reservationManager = new ReservationManager();
+        if(!isDataChanged){
+            return;
+        }
+        SkisManager skisManager = SkisManager.getInstance();
+        ReservationManager reservationManager = ReservationManager.getInstance();
         skis = skisManager.readSkisFromFile();
         List<Reservation> reservations = reservationManager.readReservations();
         List<Ski> filteredSkis = new ArrayList<>();
         for(Ski ski : skis){
             for(Reservation reservation : reservations){
+                if(ski.getId() == reservation.getId_narty() && reservation.getId_klienta() == clientId){
+                    ski.setStatus(reservation.getStatus());
+                }
                 if(ski.getId() == reservation.getId_narty() && reservation.getId_klienta() == clientId && ski.getStatus().equals("dostepne")){
                     ski.setStatus(reservation.getStatus());
                 }
@@ -80,6 +96,7 @@ public class ClientAppController {
         }
         skisManager.saveSkisToFile(skis);
         availableSkisTable.getItems().setAll(filteredSkis);
+        isDataChanged = false;
     }
     @FXML
     private void handleReservation() throws IOException {
@@ -90,7 +107,7 @@ public class ClientAppController {
             return;
         }
         Ski selectedSki = availableSkisTable.getSelectionModel().getSelectedItem();
-        ReservationManager reservationManager = new ReservationManager();
+        ReservationManager reservationManager = ReservationManager.getInstance();
         List<Reservation> reservations = reservationManager.readReservations();
         if(selectedSki != null){
             Reservation newReservation = new Reservation(reservations.size()+1,selectedSki.getId(),clientId, LocalDate.now(),LocalDate.now().plusDays(7),"Zarezerwowane",false);
@@ -99,6 +116,7 @@ public class ClientAppController {
                 // id rezerwacji zmniejszyc o jeden i sprawdzamy
                 reservationManager.saveReservation(newReservation);
             }
+            isDataChanged = true;
             loadSkisData();
         }
     }
@@ -106,7 +124,7 @@ public class ClientAppController {
     @FXML
     private void handlePay() throws IOException {
         Ski selectedSki = availableSkisTable.getSelectionModel().getSelectedItem();
-        ReservationManager reservationManager = new ReservationManager();
+        ReservationManager reservationManager = ReservationManager.getInstance();
         List<Reservation> reservations = reservationManager.readReservations();
 
         if(selectedSki != null && selectedSki.getStatus().equals("Zarezerwowane")){
@@ -120,13 +138,14 @@ public class ClientAppController {
             }
         }
         reservationManager.saveReservationsToFile(reservations);
+        isDataChanged = true;
         loadSkisData();
     }
 
     @FXML
     private void handleTakeSki() throws IOException {
         Ski selectedSki = availableSkisTable.getSelectionModel().getSelectedItem();
-        ReservationManager reservationManager = new ReservationManager();
+        ReservationManager reservationManager = ReservationManager.getInstance();
         List<Reservation> reservations = reservationManager.readReservations();
 
         if(selectedSki != null && selectedSki.getStatus().equals("Zapłacone")){
@@ -138,14 +157,15 @@ public class ClientAppController {
             }
         }
         reservationManager.saveReservationsToFile(reservations);
+        isDataChanged = true;
         loadSkisData();
     }
     @FXML
     private void returnSkis() throws IOException {
         Ski selectedSki = availableSkisTable.getSelectionModel().getSelectedItem();
-        ReservationManager reservationManager = new ReservationManager();
+        ReservationManager reservationManager = ReservationManager.getInstance();
         List<Reservation> reservations = reservationManager.readReservations();
-        SkisManager skisManager = new SkisManager();
+        SkisManager skisManager = SkisManager.getInstance();
         List<Ski> skis = skisManager.readSkisFromFile();
         Ski selectedSkiInArray = skis.get(selectedSki.getId() -1);
         if(selectedSki != null && selectedSki.getStatus().equals("Wydane")){
@@ -159,6 +179,16 @@ public class ClientAppController {
         }
         skisManager.saveSkisToFile(skis);
         reservationManager.saveReservationsToFile(reservations);
+        isDataChanged = true;
         loadSkisData();
+    }
+
+    @Override
+    public void update() {
+        System.out.println("UPDATE W METODZIE CLIENTAPPCONTROLLER");
+        if(!isDataChanged){
+            isDataChanged = true;
+            loadSkisData();
+        }
     }
 }

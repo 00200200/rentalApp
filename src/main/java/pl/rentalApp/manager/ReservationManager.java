@@ -1,14 +1,29 @@
 package pl.rentalApp.manager;
 
 import pl.rentalApp.models.Reservation;
+import pl.rentalApp.observer.Observer;
+import pl.rentalApp.observer.Subject;
 
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReservationManager {
+public class ReservationManager implements Subject {
+    private List<Observer> observers = new ArrayList<>();
+
     private String filePath = "src/main/java/pl/rentalApp/data/reservation.txt";
+
+    private static ReservationManager instance;
+
+    private ReservationManager(){};
+
+    public static ReservationManager getInstance(){
+        if(instance == null){
+            instance = new ReservationManager();
+        }
+        return instance;
+    }
 
     public ReservationManager saveReservation(Reservation reservation) throws IOException {
         try{
@@ -21,7 +36,7 @@ public class ReservationManager {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
+        notifyObservers();
         return null;
     }
 
@@ -35,6 +50,7 @@ public class ReservationManager {
             writer.write(line);
         }
         writer.close();
+        notifyObservers();
     }
 
     public List<Reservation> readReservations(){
@@ -59,5 +75,26 @@ public class ReservationManager {
             throw new RuntimeException(e);
         }
         return reservations;
+    }
+
+    @Override
+    public void addObserver(Observer o) {
+        if(!observers.contains(o)) {
+            observers.add(o);
+        }
+    }
+
+    @Override
+    public void removeObserver(Observer o) {
+
+    }
+
+    @Override
+    public void notifyObservers() {
+        for(Observer observer : observers){
+            observer.update();
+            System.out.println(observer.getClass().getName());
+            System.out.println("NOTIFY ");
+        }
     }
 }

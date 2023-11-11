@@ -12,21 +12,22 @@ import pl.rentalApp.manager.SkisManager;
 import pl.rentalApp.models.Client;
 import pl.rentalApp.models.Reservation;
 import pl.rentalApp.models.Ski;
+import pl.rentalApp.observer.Observer;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ManagerAppController {
-
+public class ManagerAppController implements Observer {
+    private SkisManager skisManager;
+    private ReservationManager reservationManager;
+    private ClientManager clientManager;
     @FXML
     private Button ManagerAddSkiButton;
-
     @FXML
     private TextField ManagerAddSkiLengthInput;
     @FXML
     private TextField ManagerAddSkiTypeInput;
-
     @FXML
     private TableColumn<Client, String> ManagerClientName;
     @FXML
@@ -55,9 +56,11 @@ public class ManagerAppController {
     private TableView<Ski> ManagerSkisTable;
     @FXML
     private TableColumn<Ski,String> ManagerSkisTypeTable;
-
     public ManagerAppController() {
-
+        skisManager = SkisManager.getInstance();
+        skisManager.addObserver(this);
+        reservationManager = ReservationManager.getInstance();
+        reservationManager.addObserver(this);
     }
 @FXML
     public void initialize(){
@@ -79,7 +82,7 @@ public class ManagerAppController {
 
     @FXML
     public void addSki(){
-        SkisManager skisManager = new SkisManager();
+        SkisManager skisManager = SkisManager.getInstance();
         List<Ski> skis = skisManager.readSkisFromFile();
         if(ManagerAddSkiLengthInput.getText() != null && ManagerAddSkiTypeInput != null){
             skis.add(new Ski(skis.size() +1,ManagerAddSkiTypeInput.getText(),Integer.parseInt(ManagerAddSkiLengthInput.getText()),"dostepne"));
@@ -96,20 +99,25 @@ public class ManagerAppController {
         if((selectedClient != null && !selectedClient.getRegistered())){
             selectedClientInArray.setRegistered(true);
         }
-        ClientManager.updateClients(clientList);
+        clientManager.updateClients(clientList);
         loadData();
     }
     public void loadData(){
-        ReservationManager reservationManager = new ReservationManager();
+        ReservationManager reservationManager = ReservationManager.getInstance();
         List<Reservation> reservations = reservationManager.readReservations();
-        SkisManager skisManager = new SkisManager();
+        SkisManager skisManager = SkisManager.getInstance();
         List<Ski> skis = skisManager.readSkisFromFile();
         ClientManager clientManager = new ClientManager();
         List<Client> clients = clientManager.readClients();
         ManagerClientsTable.getItems().setAll(clients);
         ManagerSkisTable.getItems().setAll(skis);
         ManagerReservationTable.getItems().setAll(reservations);
+    }
 
+    @Override
+    public void update() {
+        System.out.println("UPDATE W METODZIE MANAGERAPPCONTROLLER");
 
+        loadData();
     }
 }
