@@ -12,14 +12,12 @@ import java.util.List;
 public class ReservationManager implements Subject {
     private List<Observer> observers = new ArrayList<>();
 
-    private String filePath = "src/main/java/pl/rentalApp/data/reservation.txt";
+    private final String filePath = "src/main/java/pl/rentalApp/data/reservation.txt";
 
     private static ReservationManager instance;
 
     private ReservationManager() {
     }
-
-    ;
 
     public static ReservationManager getInstance() {
         if (instance == null) {

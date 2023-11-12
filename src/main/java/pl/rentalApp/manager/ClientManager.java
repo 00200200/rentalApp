@@ -14,8 +14,7 @@ import java.util.List;
 public class ClientManager implements Subject {
     private List<Observer> observers = new ArrayList<>();
     private static int lastClientId = findLastClientId();
-    public ClientManager() {
-    };
+    public ClientManager() {}
     private static String filePath = "src/main/java/pl/rentalApp/data/clients.txt";
 
 
@@ -49,7 +48,6 @@ public class ClientManager implements Subject {
         }
         return 0;
     }
-
     public List<Client> readClients() {
         List<Client> clients = new ArrayList<>();
         try {
@@ -63,8 +61,6 @@ public class ClientManager implements Subject {
                 clients.add(new Client(id, name, registered));
             }
             reader.close();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

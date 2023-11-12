@@ -1,7 +1,6 @@
 package pl.rentalApp.controllers;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -16,13 +15,6 @@ import java.util.List;
 
 public class EmployeeAppController implements Observer {
     private SkisManager skisManager;
-    @FXML
-    private Button employeButonTake;
-    @FXML
-    private Button employeeButtonGive;
-    @FXML
-    private Button employeeRefreshButton;
-
     @FXML
     private TableView<Reservation> employeeTable;
 

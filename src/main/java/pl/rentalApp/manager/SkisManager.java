@@ -17,7 +17,6 @@ public class SkisManager implements Subject {
     private SkisManager() {
     }
 
-    ;
 
     public static SkisManager getInstance() {
         if (instance == null) {

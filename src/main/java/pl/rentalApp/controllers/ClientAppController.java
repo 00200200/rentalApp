@@ -1,7 +1,6 @@
 package pl.rentalApp.controllers;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -116,7 +115,6 @@ public class ClientAppController implements Observer {
             for (Reservation reservation : reservations) {
                 if (!reservation.isPayMent() && reservation.getId_klienta() == clientId && reservation.getId_narty() == selectedSki.getId()) {
                     reservation.setStatus("Zapłacone");
-
                     reservation.setPayMent(true);
                     break;
                 }
