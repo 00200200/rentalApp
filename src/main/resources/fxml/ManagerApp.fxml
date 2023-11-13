@@ -12,7 +12,7 @@
       <Label layoutX="72.0" layoutY="20.0" text="Dostępne Narty" />
       <TextField fx:id="ManagerAddSkiTypeInput" layoutX="391.0" layoutY="84.0" text="Rodzaj" />
       <Label layoutX="439.0" layoutY="59.0" text="Dodaj Narte" />
-      <Button onAction="#addSki" fx:id="ManagerAddSkiButton" layoutX="441.0" layoutY="158.0" mnemonicParsing="false" text="DODAJ" />
+      <Button fx:id="ManagerAddSkiButton" layoutX="441.0" layoutY="158.0" mnemonicParsing="false" onAction="#addSki" text="DODAJ" />
       <TableView fx:id="ManagerSkisTable" layoutX="3.0" layoutY="44.0" prefHeight="200.0" prefWidth="306.0">
         <columns>
           <TableColumn fx:id="ManagerSkisTypeTable" prefWidth="75.0" text="name" />
@@ -40,5 +40,6 @@
       <Label layoutX="97.0" layoutY="259.0" text="Klienci" />
       <Button fx:id="ManagerRegisterClient" layoutX="57.0" layoutY="495.0" mnemonicParsing="false" onAction="#registerClient" text="Zarejestruj Klienta" />
       <TextField fx:id="ManagerAddSkiLengthInput" layoutX="391.0" layoutY="119.0" text="Długość" />
+      <Button fx:id="ManagerRefreshButton" onAction="#update"  layoutX="197.0" layoutY="495.0" mnemonicParsing="false" text="odśwież" />
    </children>
 </AnchorPane>

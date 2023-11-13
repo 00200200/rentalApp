@@ -1,0 +1,2 @@
+1,Nazwa Klienta,true
+2,Nazwa Klienta,true

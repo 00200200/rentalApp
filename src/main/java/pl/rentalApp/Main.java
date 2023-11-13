@@ -14,7 +14,6 @@ public class Main extends Application {
         stage.setTitle("Wybierz użytkownika");
         FXMLLoader loader =  new FXMLLoader(getClass().getResource("/fxml/MainApp.fxml"));
         VBox mainPane = loader.load();
-
         MainAppController mainAppController = loader.getController();
         if(mainAppController != null){
             mainAppController.setPrimaryStage(stage);
